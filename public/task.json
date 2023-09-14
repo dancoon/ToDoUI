@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "title": "Task title",
+        "completed": true,
+        "checklist": [
+            {
+                "title": "Check 1",
+                "completed": true
+            },
+            {
+                "title": "Check 2",
+                "completed": false
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Task title",
+        "completed": true,
+        "checklist": [
+            {
+                "title": "Check 1",
+                "completed": true
+            },
+            {
+                "title": "Check 2",
+                "completed": false
+            }
+        ]
+    }
+]
