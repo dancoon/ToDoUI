@@ -9,7 +9,6 @@ let checkIdSelectedArray = [];
 
 const activeTask = (t) => {
   current = getTask(t);
-  console.log(current)
   localStorage.setItem("currentTask", JSON.stringify(current));
 }
 
@@ -89,3 +88,13 @@ const deleteCheckItem = (taskId, checkIdDelete) => {
   task.checklist = checklistCopy;
   localStorage.setItem("tasks", JSON.stringify(tasksArray));
 };
+
+const countTasksDone = () => {
+  let count = 0;
+  tasksArray.forEach(element => {
+    if (element.completed) count++;
+  });
+  return count;
+}
+
+console.log(countTasksDone());
