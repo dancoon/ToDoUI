@@ -37,8 +37,8 @@ const markCheckComplete = (span, c) => {
 };
 
 const deleteItem = (parent, child) => {
-  parent.removeChild(child);
   deleteTask(child.id);
+  parent.removeChild(child);
 };
 
 const deleteSelectedTask = () =>
