@@ -4,6 +4,30 @@ window.addEventListener("load", (event) => {
     activateTask(tasksArray[tasksArray.length - 1]);
 });
 
+const progressBar = () =>
+{
+  const tasksDone = countTasksDone();
+  if (tasksArray.length && tasksDone) 
+    document.getElementById("bar").parentNode.classList.remove("hidden");
+  const currentWidth = document.getElementById("bar").clientWidth;
+  const total = tasksArray.length;
+  const width = tasksDone / total * currentWidth;
+  const percentage = width / currentWidth * 100;
+  document.getElementById("bar").style.width = `${width}px`;
+  // console.log(percentage);
+  let bg = "";
+  if (percentage >= 75) {
+    bg = "bg-green-500";
+  } else if (percentage >= 50) {
+    bg = "bg-yellow-500";
+  } else if (percentage >= 25) {
+    bg = "bg-orange-500";
+  } else {
+    bg = "bg-red-500";
+  }
+  document.getElementById("bar").classList.add(bg);
+}
+
 const selectTask = (t) => taskIdSelectedArray.push(t);
 const selectCheck = (c) => checkIdSelectedArray.push(c);
 
@@ -16,6 +40,7 @@ function removeAllChildNodes(parent) {
 const markTaskComplete = (span, t) => {
   span.classList.add("line-through");
   updateStatus(t);
+  location.reload();
 };
 
 const doneAllTasks = () =>
@@ -148,6 +173,7 @@ const addChecklist = () => {
 };
 
 const displayTasks = (taskArray) => {
+  progressBar();
   const taskList = document.getElementById("taskList");
   removeAllChildNodes(taskList);
   if (taskArray && taskArray.length)
