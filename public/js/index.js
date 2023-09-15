@@ -1,4 +1,8 @@
-window.addEventListener("load", (event) => displayTasks(tasksArray));
+window.addEventListener("load", (event) => {
+  displayTasks(tasksArray);
+  if (tasksArray && tasksArray.length)
+    activateTask(tasksArray[tasksArray.length - 1]);
+});
 
 const selectTask = (t) => taskIdSelectedArray.push(t);
 const selectCheck = (c) => checkIdSelectedArray.push(c);
@@ -44,11 +48,11 @@ const deleteSelectedTask = () =>
 
 const deleteCheck = (parent, child) => {
   parent.removeChild(child);
-  deleteCheckItem(TaskIdSlected, child.id);
+  deleteCheckItem(taskIdSelected, child.id);
 };
 
 const deleteAllCheck = () =>
-  getTask(TaskIdSlected).checklist.forEach((check) =>
+  getTask(taskIdSelected).checklist.forEach((check) =>
     deleteCheck(
       document.getElementById("checkList"),
       document.getElementById(check.id)
@@ -64,7 +68,7 @@ const deleteSelectedCheck = () =>
   );
 
 const doneAllChecks = () =>
-  getTask(TaskIdSlected).checklist.forEach((c) =>
+  getTask(taskIdSelected).checklist.forEach((c) =>
     markCheckComplete(document.getElementById(c.id).querySelector("span"), c)
   );
 
@@ -72,20 +76,21 @@ const doneSelectedChecks = () =>
   checkIdSelectedArray.forEach((c) =>
     markCheckComplete(
       document.getElementById(c).querySelector("span"),
-      getCheck(TaskIdSlected, c)
+      getCheck(taskIdSelected, c)
     )
   );
 
 const activateTask = (item) => {
-  TaskIdSlected = item.id;
+  taskIdSelected = item.id;
+  activeTask(item.id);
   const children = document.getElementById("taskList").children;
   for (let index = 0; index < children.length; index++) {
     const element = children[index];
-    TaskIdSlected == element.id
+    taskIdSelected == element.id
       ? element.classList.add("bg-blue-400")
       : element.classList.remove("bg-blue-400");
   }
-  displayChecklist(getTask(TaskIdSlected).checklist);
+  displayChecklist(getTask(taskIdSelected).checklist);
 };
 
 const showModal = (modalId) =>
@@ -128,17 +133,25 @@ document
 
 const addTask = () => {
   storeTask(document.getElementById("taskInput").value);
-  location.reload();
+  currentTask = tasksArray[tasksArray.length - 1];
+  displayTasks(tasksArray);
+  document.getElementById("taskInput").value = "";
+  activateTask(tasksArray[tasksArray.length - 1]);
 };
 
-const addChecklist = () =>
+const addChecklist = () => {
   storeChecklist(
     document.getElementById("checklistInput").value,
-    TaskIdSlected
+    taskIdSelected
   );
+  displayChecklist(getTask(taskIdSelected).checklist);
+};
 
 const displayTasks = (taskArray) => {
   const taskList = document.getElementById("taskList");
+  removeAllChildNodes(taskList);
+  if (taskArray && taskArray.length)
+    document.getElementById("no-task").classList.add("hidden");
   taskArray.forEach((item) => {
     const listItem = document.createElement("li");
     const listWrapper = document.createElement("div");
@@ -194,6 +207,9 @@ const displayTasks = (taskArray) => {
 };
 
 const displayChecklist = (checklistArray) => {
+  checklistArray && checklistArray.length
+    ? document.getElementById("no-checklist").classList.add("hidden")
+    : document.getElementById("no-checklist").classList.remove("hidden");
   const checkList = document.getElementById("checkList");
   removeAllChildNodes(checkList);
   checklistArray.forEach((item) => {

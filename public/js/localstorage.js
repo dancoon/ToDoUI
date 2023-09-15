@@ -2,9 +2,16 @@ let tasksArray = localStorage.getItem("tasks")
   ? JSON.parse(localStorage.getItem("tasks"))
   : [];
 
-let TaskIdSlected = "";
+let taskIdSelected = "";
+let current = ""
 let taskIdSelectedArray = [];
 let checkIdSelectedArray = [];
+
+const activeTask = (t) => {
+  current = getTask(t);
+  console.log(current)
+  localStorage.setItem("currentTask", JSON.stringify(current));
+}
 
 const getTask = (t) => {
   let task = null;
