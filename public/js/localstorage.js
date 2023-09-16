@@ -59,6 +59,7 @@ const deleteTask = (taskId) => {
   }
   tasksArray = tasksArrayCopy;
   localStorage.setItem("tasks", JSON.stringify(tasksArray));
+  location.reload();
 };
 
 const deleteAll = () => {
