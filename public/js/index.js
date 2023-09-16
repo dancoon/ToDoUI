@@ -69,7 +69,7 @@ const markCheckComplete = (span, c) => {
 };
 
 const deleteItem = (parent, child) => {
-  parent.removeChild(child);
+   parent.removeChild(child);
   deleteTask(child.id);
   location.reload();
 };
