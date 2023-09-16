@@ -9,45 +9,46 @@
 </head>
 
 <body class="bg-coal max-h-screen overflow-hidden">
-    <header class="border-b">
+    <header class="border bg-gray">
         <h1 class="text-center text-lg">ToDo</h1>
     </header>
     <main class="flex h-screen">
-        <div class="w-1/3 border-r overflow-auto max-h-screen no-scrollbar">
-            <div class="flex justify-between items-center fixed w-1/3 bg-coal border-b border-r p-2">
-                <h3 class="text-center text-lg flex-grow text-white">Tasks</h3>
-                <button id="newTaskBtn">
-                    <span class="flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        <h3 class="text-lg">New task</h3>
-                    </span>
+        <div class="w-1/3 border-r overflow-auto max-h-screen no-scrollbar bg-dark">
+            <div class="fixed w-1/3 bg-blur border-r">
+                <div class="flex justify-between items-center bg-gray border-b p-2">
+                    <h3 class="text-center text-lg flex-grow text-white font-bold">Tasks</h3>
+                    <button id="newTaskBtn">
+                        <h3 class="text-lg font-medium text-blue-400">Add task</h3>
+                        </span>
 
-                </button>
-                <span id="taskOptions" class="cursor-pointer">
-                    <svg class="h-7 w-7" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000"
-                        class="bi bi-three-dots-vertical">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0" />
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
-                        <g id="SVGRepo_iconCarrier">
-                            <path
-                                d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                        </g>
-                    </svg>
-                </span>
+                    </button>
+                </div>
+                <div class="hidden m-3 mt-4 border-2 border-gray-900 rounded-xl" style="height: 20px;">
+                    <div id="bar" class=" rounded-xl" style="height: 15px;"></div>
+                </div>
             </div>
-            <div class="hidden fixed w-[calc(32%)] ml-2 bg-black mt-14 border-2 border-black rounded-xl">
-                <div id="bar" class=" bg-red-400 p-3 rounded-xl"></div>
-            </div>
-            <div class="mt-24 pb-10">
+            <div class="mt-24 pb-28">
+                <div class="hidden" id="no-task">
+                    <h3 class="text-center text-white">You have no tasks. Add a task</h3>
+                </div>
                 <ul id="taskList"></ul>
-                <div id="no-task">You have no tasks. Add a task</div>
+            </div>
+            <!-- task's options  -->
+            <div class="fixed w-1/3 border border-r bottom-0 bg-blur p-2">
+                <div class="flex justify-between">
+                    <button onclick="doneSelectedTasks()" class="w-1/2 bg-blue-400 m-1 rounded-lg">Complete
+                        Selected</button>
+                    <button onclick="doAllTasks()" class="w-1/2 bg-blue-600 m-1 rounded-lg">Complete All</button>
+                </div>
+                <div class="flex justify-between">
+                    <button onclick="deleteSelectedTask()" class="w-1/2 bg-red-400 m-1 rounded-lg">Delete
+                        Selected</button>
+                    <button onclick="deleteAll()" class="w-1/2 bg-red-600 m-1 rounded-lg">Delete All</button>
+                </div>
             </div>
         </div>
-        <div class="w-2/3 overflow-auto max-h-screen no-scrollbar">
-            <div class="flex justify-between items-center fixed w-2/3 bg-coal border-b p-2">
+        <div class="w-2/3 overflow-auto max-h-screen no-scrollbar bg-blur">
+            <div class="flex justify-between items-center fixed w-2/3 bg-gray border-b p-2">
                 <h3 class="text-center text-lg flex-grow">Checklist</h3>
                 <button id="newChecklistBtn">
                     <span class="flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
@@ -70,18 +71,20 @@
                     </svg>
                 </span>
             </div>
-            <div class="mt-11 pb-10 ">
+            <div class="mt-24 pb-8">
                 <ul id="checkList"></ul>
-                <div id="no-checklist">You have no checklist</div>
+                <div id="no-checklist">
+                    <h3 class="text-center text-white">You have no checklist</h3>
+                </div>
             </div>
         </div>
     </main>
 
     <!-- modals -->
     <!-- add task modal -->
-    <div id="newTaskModal" class="hidden absolute top-1/2 left-1/2 bg-white border border-black">
-        <div class="flex justify-between border border-black">
-            <span class="">Create new task</span>
+    <div id="newTaskModal" class="hidden w-1/3 h-1/4 absolute top-1/3 left-1/2 bg-white border border-black rounded-lg">
+        <div class="flex border-b border-black">
+            <span class="m-1 p-1 flex-grow text-center">Create new task</span>
             <button id="cancelbtn"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -89,10 +92,16 @@
                 </svg>
             </button>
         </div>
-        <input id="taskInput" type="text" placeholder="Enter task's title">
-        <!-- <div> -->
-        <button id="addTaskBtn" onclick="addTask()">Add</button>
-        <!-- </div> -->
+        <div class="flex flex-col w-full justify-center h-1/4 mt-6">
+            <input class="w-11/12 mx-auto outline-none p-2 border border-blue-300 rounded-xl mt-6" id="taskInput" type="text"
+                placeholder="Enter task's title">
+            <div class="flex mx-auto w-11/12 mt-3">
+                <button class="bg-blue-400 rounded-xl w-1/2 mr-1 p-1" id="addTaskBtn"
+                    onclick="addTask()">Add</button>
+                    <button class="bg-red-400 rounded-xl w-1/2 ml-1 p-1" id="addTaskBtn"
+                    onclick="clearTask()">Clear</button>
+            </div>
+        </div>
     </div>
 
     <!-- add checklist modal  -->

@@ -1,20 +1,27 @@
 window.addEventListener("load", (event) => {
   displayTasks(tasksArray);
-  if (tasksArray && tasksArray.length)
-    activateTask(tasksArray[tasksArray.length - 1]);
+  if (current) activateTask(current);
 });
 
-const progressBar = () =>
-{
+const progressBar = () => {
   const tasksDone = countTasksDone();
-  if (tasksArray.length && tasksDone) 
-    document.getElementById("bar").parentNode.classList.remove("hidden");
+  const parent = document.getElementById("bar").parentNode;
+  if (tasksArray.length)
+    parent.classList.remove(
+      "hidden",
+      "bg-green-500",
+      "bg-yellow-500",
+      "bg-orange-500",
+      "bg-red-500"
+    );
   const currentWidth = document.getElementById("bar").clientWidth;
   const total = tasksArray.length;
-  const width = tasksDone / total * currentWidth;
-  const percentage = width / currentWidth * 100;
+  const width = (tasksDone / total) * currentWidth;
+  const percentage = (width / currentWidth) * 100;
+
   document.getElementById("bar").style.width = `${width}px`;
-  // console.log(percentage);
+  console.log(percentage);
+  document.getElementById("bar").classList.remove();
   let bg = "";
   if (percentage >= 75) {
     bg = "bg-green-500";
@@ -26,7 +33,7 @@ const progressBar = () =>
     bg = "bg-red-500";
   }
   document.getElementById("bar").classList.add(bg);
-}
+};
 
 const selectTask = (t) => taskIdSelectedArray.push(t);
 const selectCheck = (c) => checkIdSelectedArray.push(c);
@@ -43,7 +50,7 @@ const markTaskComplete = (span, t) => {
   location.reload();
 };
 
-const doneAllTasks = () =>
+const doAllTasks = () =>
   tasksArray.forEach((element) =>
     markTaskComplete(
       document.getElementById(element.id).querySelector("span"),
@@ -64,6 +71,7 @@ const markCheckComplete = (span, c) => {
 const deleteItem = (parent, child) => {
   parent.removeChild(child);
   deleteTask(child.id);
+  location.reload();
 };
 
 const deleteSelectedTask = () =>
@@ -141,14 +149,6 @@ document
   .addEventListener("click", () => hideModal("newChecklistModal"));
 
 document
-  .getElementById("taskOptions")
-  .addEventListener("click", () =>
-    document.getElementById("optionstasks").classList.contains("hidden")
-      ? showModal("optionstasks")
-      : hideModal("optionstasks")
-  );
-
-document
   .getElementById("checklistOptions")
   .addEventListener("click", () =>
     document.getElementById("optionschecklist").classList.contains("hidden")
@@ -178,6 +178,7 @@ const displayTasks = (taskArray) => {
   removeAllChildNodes(taskList);
   if (taskArray && taskArray.length)
     document.getElementById("no-task").classList.add("hidden");
+  else document.getElementById("no-task").classList.remove("hidden");
   taskArray.forEach((item) => {
     const listItem = document.createElement("li");
     const listWrapper = document.createElement("div");
@@ -201,10 +202,14 @@ const displayTasks = (taskArray) => {
     checkBox.addEventListener("click", () => selectTask(`${item.id}`));
 
     // list wrapper classes
-    listWrapper.setAttribute("class", "flex justify-between p-2");
+    listWrapper.setAttribute(
+      "class",
+      "flex justify-between p-2  border-t border-b border-slate-500"
+    );
 
     // task title
-    taskTitle.setAttribute("class", "cursor-pointer");
+    titleWrapper.setAttribute("class", "");
+    taskTitle.setAttribute("class", "cursor-pointer flex-grow text-slate-200");
 
     // span (title)
     if (item.completed) taskTitle.classList.add("line-through");
@@ -221,9 +226,9 @@ const displayTasks = (taskArray) => {
       deleteItem(taskList, listItem)
     );
 
-    titleWrapper.appendChild(checkBox);
     titleWrapper.appendChild(taskTitle);
 
+    listWrapper.appendChild(checkBox);
     listWrapper.appendChild(titleWrapper);
     listWrapper.appendChild(buttonsWrapper);
 
@@ -286,3 +291,19 @@ const displayChecklist = (checklistArray) => {
     checkList.appendChild(listItem);
   });
 };
+
+function checkWindowSize() {
+  let windowWidth = window.innerWidth;
+  let windowHeight = window.innerHeight;
+  window.addEventListener("resize", function () {
+    if (
+      window.innerWidth !== windowWidth ||
+      window.innerHeight !== windowHeight
+    )
+      this.location.reload();
+  });
+}
+
+checkWindowSize();
+
+const clearTaskTitle = () => (document.getElementById("taskInput").value = "");
