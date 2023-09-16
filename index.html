@@ -9,14 +9,14 @@
 </head>
 
 <body class="bg-coal max-h-screen overflow-hidden">
-    <header class="border bg-gray">
-        <h1 class="text-center text-lg">ToDo</h1>
+    <header class="border-b bg-gray">
+        <h1 class="text-center text-xl text-blue-700 font-medium p-1">ToDo App</h1>
     </header>
     <main class="flex h-screen">
         <div class="w-1/3 border-r overflow-auto max-h-screen no-scrollbar bg-dark">
             <div class="fixed w-1/3 bg-blur border-r">
                 <div class="flex justify-between items-center bg-gray border-b p-2">
-                    <h3 class="text-center text-lg flex-grow text-white font-bold">Tasks</h3>
+                    <h3 class="text-center text-lg flex-grow text-white font-medium">Tasks</h3>
                     <button id="newTaskBtn">
                         <h3 class="text-lg font-medium text-blue-400">Add task</h3>
                         </span>
@@ -28,10 +28,10 @@
                 </div>
             </div>
             <div class="mt-24 pb-28">
-                <div class="hidden" id="no-task">
-                    <h3 class="text-center text-white">You have no tasks. Add a task</h3>
-                </div>
                 <ul id="taskList"></ul>
+            </div>
+            <div class="hidden" id="no-task">
+                <h3 class="text-center text-white">You have no tasks. Add a task</h3>
             </div>
             <!-- task's options  -->
             <div class="fixed w-1/3 border border-r bottom-0 bg-blur p-2">
@@ -48,15 +48,11 @@
             </div>
         </div>
         <div class="w-2/3 overflow-auto max-h-screen no-scrollbar bg-blur">
-            <div class="flex justify-between items-center fixed w-2/3 bg-gray border-b p-2">
-                <h3 class="text-center text-lg flex-grow">Checklist</h3>
-                <button id="newChecklistBtn">
-                    <span class="flex"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        <h3>New checklist</h3>
+            <div class="flex justify-between items-center fixed w-2/3 bg-gray p-2">
+                <h3 class="text-center text-lg flex-grow text-white font-medium">Checklist</h3>
+                <button id="newChecklistBtn" disabled class="cursor-not-allowed">
+                    <span class="flex">
+                        <h3 class="text-lg font-medium text-blue-400">Add checklist</h3>
                     </span>
                 </button>
                 <span id="checklistOptions" class="cursor-pointer">
@@ -71,11 +67,11 @@
                     </svg>
                 </span>
             </div>
-            <div class="mt-24 pb-8">
+            <div class="mt-12 pb-10">
                 <ul id="checkList"></ul>
-                <div id="no-checklist">
-                    <h3 class="text-center text-white">You have no checklist</h3>
-                </div>
+            </div>
+            <div id="no-checklist" class="flex h-1/2 justify-center items-center">
+                <h3 class="text-center text-white">You have no checklist</h3>
             </div>
         </div>
     </main>
@@ -93,21 +89,21 @@
             </button>
         </div>
         <div class="flex flex-col w-full justify-center h-1/4 mt-6">
-            <input class="w-11/12 mx-auto outline-none p-2 border border-blue-300 rounded-xl mt-6" id="taskInput" type="text"
-                placeholder="Enter task's title">
+            <input class="w-11/12 mx-auto outline-none p-2 border border-blue-300 rounded-xl mt-6" id="taskInput"
+                type="text" placeholder="Enter task's title">
             <div class="flex mx-auto w-11/12 mt-3">
-                <button class="bg-blue-400 rounded-xl w-1/2 mr-1 p-1" id="addTaskBtn"
-                    onclick="addTask()">Add</button>
-                    <button class="bg-red-400 rounded-xl w-1/2 ml-1 p-1" id="addTaskBtn"
+                <button class="bg-blue-400 rounded-xl w-1/2 mr-1 p-1" id="addTaskBtn" onclick="addTask()">Add</button>
+                <button class="bg-red-400 rounded-xl w-1/2 ml-1 p-1" id="addTaskBtn"
                     onclick="clearTask()">Clear</button>
             </div>
         </div>
     </div>
 
     <!-- add checklist modal  -->
-    <div id="newChecklistModal" class="hidden absolute top-1/2 left-1/2 bg-white border border-black">
-        <div class="flex justify-between border border-black">
-            <span class="">Create new checklist</span>
+    <div id="newChecklistModal"
+        class="hidden w-1/3 h-1/4 absolute top-1/3 left-1/2 bg-white border border-black rounded-lg">
+        <div class="flex border-b border-black">
+            <span class="m-1 p-1 flex-grow text-center">Create new checklist</span>
             <button id="cancelChecklistModal"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -115,29 +111,30 @@
                 </svg>
             </button>
         </div>
-        <input id="checklistInput" type="text" placeholder="Enter checklist's title">
-        <!-- <div> -->
-        <button id="addChecklist" onclick="addChecklist()">Add</button>
-        <!-- </div> -->
-    </div>
-
-    <!-- task's options  -->
-    <div id="optionstasks" class="hidden absolute top-[73px] left-[260px] w-[165px] bg-slate-200">
-        <ul>
-            <li><button onclick="doneSelectedTasks()" class="w-full">Done Selected</button></li>
-            <li><button onclick="doneAlltasks()" class="w-full">Done All</button></li>
-            <li><button onclick="deleteSelectedTask()" class="w-full">Delete Selected</button></li>
-            <li><button onclick="deleteAll()" class="w-full">Delete All</button></li>
-        </ul>
+        <div class="flex flex-col w-full justify-center h-1/4 mt-6">
+            <input class="w-11/12 mx-auto outline-none p-2 border border-blue-300 rounded-xl mt-6" id="checklistInput"
+                type="text" placeholder="Enter checklist's title">
+            <div class="flex mx-auto w-11/12 mt-3">
+                <button class="bg-blue-400 rounded-xl w-1/2 mr-1 p-1 id=" addChecklist"
+                    onclick="addChecklist()">Add</button>
+                <button class="bg-red-400 rounded-xl w-1/2 ml-1 p-1" id="addTaskBtn"
+                    onclick="clearChecklistTitle()">Clear</button>
+            </div>
+        </div>
     </div>
 
     <!-- checklist's options  -->
-    <div id="optionschecklist" class="hidden absolute top-[73px] right-0 w-[165px] bg-slate-200">
+    <div id="optionschecklist" class="hidden absolute top-[80px] right-0 w-[245px] rounded-md bg-slate-300">
         <ul>
-            <li><button onclick="doneSelectedChecks()" class="w-full">Done Selected</button></li>
-            <li><button onclick="doneAllChecks()" class="w-full">Done All</button></li>
-            <li><button onclick="deleteSelectedCheck()" class="w-full">Delete Selected</button></li>
-            <li><button onclick="deleteAllCheck()" class="w-full">Delete All</button></li>
+            <li><button onclick="doneSelectedChecks()"
+                    class="w-full text-left pl-4 p-1 border-b  hover:bg-blue-200">Complete Selected Checklist</button>
+            </li>
+            <li><button onclick="doneAllChecks()" class="w-full text-left pl-4 p-1 border-b  hover:bg-blue-400">Complete
+                    All Checklist</button></li>
+            <li><button onclick="deleteSelectedCheck()"
+                    class="w-full text-left pl-4 p-1 border-b  hover:bg-red-200">Delete Selected Checklist</button></li>
+            <li><button onclick="deleteAllCheck()" class="w-full text-left pl-4 p-1 border-b  hover:bg-red-400">Delete
+                    All Checklist</button></li>
         </ul>
     </div>
 

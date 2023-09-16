@@ -1,6 +1,7 @@
 window.addEventListener("load", (event) => {
   displayTasks(tasksArray);
   if (current) activateTask(current);
+  allowAddChecklist();
 });
 
 const progressBar = () => {
@@ -82,6 +83,7 @@ const deleteSelectedTask = () =>
 const deleteCheck = (parent, child) => {
   parent.removeChild(child);
   deleteCheckItem(taskIdSelected, child.id);
+  location.reload();
 };
 
 const deleteAllCheck = () =>
@@ -136,10 +138,6 @@ document
   .getElementById("newTaskBtn")
   .addEventListener("click", () => showModal("newTaskModal"));
 
-document
-  .getElementById("newChecklistBtn")
-  .addEventListener("click", () => showModal("newChecklistModal"));
-
 document.getElementById("cancelbtn").addEventListener("click", () => {
   hideModal("newTaskModal");
 });
@@ -148,13 +146,22 @@ document
   .getElementById("cancelChecklistModal")
   .addEventListener("click", () => hideModal("newChecklistModal"));
 
-document
-  .getElementById("checklistOptions")
-  .addEventListener("click", () =>
-    document.getElementById("optionschecklist").classList.contains("hidden")
-      ? showModal("optionschecklist")
-      : hideModal("optionschecklist")
-  );
+const allowAddChecklist = () => {
+  if (tasksArray.length) {
+    document
+      .getElementById("checklistOptions")
+      .addEventListener("click", () =>
+        document.getElementById("optionschecklist").classList.contains("hidden")
+          ? showModal("optionschecklist")
+          : hideModal("optionschecklist")
+      );
+    const btn = document.getElementById("newChecklistBtn");
+    btn.removeAttribute("disabled");
+    btn.addEventListener("click", () => showModal("newChecklistModal"));
+    btn.classList.remove("cursor-not-allowed");
+    btn.classList.add("cursor-pointer");
+  }
+};
 
 const addTask = () => {
   storeTask(document.getElementById("taskInput").value);
@@ -162,6 +169,7 @@ const addTask = () => {
   displayTasks(tasksArray);
   document.getElementById("taskInput").value = "";
   activateTask(tasksArray[tasksArray.length - 1]);
+  allowAddChecklist();
 };
 
 const addChecklist = () => {
@@ -170,6 +178,7 @@ const addChecklist = () => {
     taskIdSelected
   );
   displayChecklist(getTask(taskIdSelected).checklist);
+  document.getElementById("checklistInput").value = "";
 };
 
 const displayTasks = (taskArray) => {
@@ -194,6 +203,7 @@ const displayTasks = (taskArray) => {
     listItem.id = item.id;
     taskTitle.textContent = `${item.title}`;
     checkBox.setAttribute("type", "checkbox");
+    checkBox.classList.add("cursor-pointer");
     completeButton.innerHTML = "<span class=''>&#10004;</span>";
     deleteButton.innerHTML = "<span class=''>&#10060;</span>";
 
@@ -256,13 +266,19 @@ const displayChecklist = (checklistArray) => {
     listItem.id = item.id;
     checkTitle.textContent = `${item.title}`;
     checkBox.setAttribute("type", "checkbox");
+    checkBox.classList.add("cursor-pointer");
     completeButton.innerHTML = "<span class=''>&#10004;</span>";
     deleteButton.innerHTML = "<span class=''>&#10060;</span>";
 
     checkBox.addEventListener("click", () => selectCheck(`${item.id}`));
 
     // list wrapper classes
-    listWrapper.setAttribute("class", "flex justify-between p-2");
+    listWrapper.setAttribute(
+      "class",
+      "flex justify-between p-2  border-t border-b border-slate-500"
+    );
+
+    checkTitle.setAttribute("class", "flex-grow text-slate-200");
 
     if (item.completed) checkTitle.classList.add("line-through");
 
@@ -281,9 +297,9 @@ const displayChecklist = (checklistArray) => {
     buttonsWrapper.appendChild(completeButton);
     buttonsWrapper.appendChild(deleteButton);
 
-    titleWrapper.appendChild(checkBox);
     titleWrapper.appendChild(checkTitle);
 
+    listWrapper.appendChild(checkBox);
     listWrapper.appendChild(titleWrapper);
     listWrapper.appendChild(buttonsWrapper);
 
@@ -307,3 +323,5 @@ function checkWindowSize() {
 checkWindowSize();
 
 const clearTaskTitle = () => (document.getElementById("taskInput").value = "");
+const clearChecklistTitle = () =>
+  (document.getElementById("checklistInput").value = "");
