@@ -3,14 +3,16 @@ let tasksArray = localStorage.getItem("tasks")
   : [];
 
 let taskIdSelected = "";
-let current = ""
+let current = localStorage.getItem("currentTask")
+  ? JSON.parse(localStorage.getItem("currentTask"))
+  : "";
 let taskIdSelectedArray = [];
 let checkIdSelectedArray = [];
 
 const activeTask = (t) => {
   current = getTask(t);
   localStorage.setItem("currentTask", JSON.stringify(current));
-}
+};
 
 const getTask = (t) => {
   let task = null;
@@ -91,10 +93,8 @@ const deleteCheckItem = (taskId, checkIdDelete) => {
 
 const countTasksDone = () => {
   let count = 0;
-  tasksArray.forEach(element => {
+  tasksArray.forEach((element) => {
     if (element.completed) count++;
   });
   return count;
-}
-
-console.log(countTasksDone());
+};
